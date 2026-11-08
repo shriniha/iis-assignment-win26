@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="base" params="name base_radius base_height">
+
+    <link name="${name}">
+      <visual>
+        <origin xyz="0 0 ${base_height/2.0}" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="${base_radius}" length="${base_height}"/>
+        </geometry>
+        <material name="base_grey"/>
+      </visual>
+    </link>
+
+  </xacro:macro>
+
+</robot>

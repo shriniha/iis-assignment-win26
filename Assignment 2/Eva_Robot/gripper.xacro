@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="gripper"
+               params="parent attach_x gripper_span
+                       palm_length:=0.06
+                       finger_length:=0.08
+                       finger_thickness:=0.01
+                       finger_height:=0.04">
+
+    <!-- Gripper palm -->
+    <link name="gripper_base">
+
+      <visual>
+        <origin xyz="${palm_length/2.0} 0 0"/>
+        <geometry>
+          <box size="${palm_length}
+                     ${gripper_span + 2*finger_thickness + 0.02}
+                     ${finger_height}"/>
+        </geometry>
+        <material name="palm_dark"/>
+      </visual>
+
+    </link>
+
+    <!-- Wrist rotation for pouring -->
+    <joint name="wrist_roll_joint" type="revolute">
+      <parent link="${parent}"/>
+      <child link="gripper_base"/>
+      <origin xyz="${attach_x} 0 0"/>
+      <axis xyz="1 0 0"/>
+      <limit lower="-1.57" upper="1.57"
+             effort="20" velocity="1.0"/>
+    </joint>
+
+    <!-- Left finger -->
+    <link name="finger_left">
+      <visual>
+        <geometry>
+          <box size="${finger_length}
+                     ${finger_thickness}
+                     ${finger_height}"/>
+        </geometry>
+        <material name="finger_black"/>
+      </visual>
+    </link>
+
+    <joint name="finger_left_joint" type="prismatic">
+      <parent link="gripper_base"/>
+      <child link="finger_left"/>
+      <origin xyz="${palm_length + finger_length/2.0}
+                   ${finger_thickness/2.0} 0"/>
+      <axis xyz="0 1 0"/>
+      <limit lower="0" upper="${gripper_span/2.0}"
+             effort="40" velocity="0.1"/>
+    </joint>
+
+    <!-- Right finger -->
+    <link name="finger_right">
+      <visual>
+        <geometry>
+          <box size="${finger_length}
+                     ${finger_thickness}
+                     ${finger_height}"/>
+        </geometry>
+        <material name="finger_black"/>
+      </visual>
+    </link>
+
+    <joint name="finger_right_joint" type="prismatic">
+      <parent link="gripper_base"/>
+      <child link="finger_right"/>
+      <origin xyz="${palm_length + finger_length/2.0}
+                   ${-finger_thickness/2.0} 0"/>
+      <axis xyz="0 -1 0"/>
+      <limit lower="0" upper="${gripper_span/2.0}"
+             effort="40" velocity="0.1"/>
+    </joint>
+
+  </xacro:macro>
+
+</robot>
